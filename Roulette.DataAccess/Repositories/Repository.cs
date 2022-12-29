@@ -8,7 +8,7 @@ namespace Roulette.DataAccess.Repositories
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
-        //
+        
         internal DbSet<T> dbSet;
         public Repository(ApplicationDbContext db)
         {
@@ -25,7 +25,8 @@ namespace Roulette.DataAccess.Repositories
         //Get
         public async Task<T> GetAsync(int id)
         {
-            return await dbSet.FindAsync(id);
+            return await dbSet.FindAsync(id) 
+                ?? throw new Exception("Not record found");
         }
 
         //GetAll
@@ -75,16 +76,17 @@ namespace Roulette.DataAccess.Repositories
             }
 
 
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync() 
+                ?? throw new Exception("No record found");
         }
 
         //Remove
         public void Remove(int id)
         {
-            T entity = dbSet.Find(id);
+            T entity = dbSet.Find(id)
+                ?? throw new Exception("Cannot remove that does not exist.");
 
             Remove(entity);
-
         }
 
         public void Remove(T entity)

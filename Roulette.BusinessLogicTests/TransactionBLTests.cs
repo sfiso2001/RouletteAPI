@@ -12,8 +12,6 @@ namespace Roulette.BusinessLogicTests
     [TestClass]
     public class TransactionBLTests : BaseTest
     {
-        private readonly Mock<IGameTransactionRepository> _gameTransactionRepository = new();
-        private readonly Mock<IPlayerDetailRepository> _playerDetailRepositoryMock = new();
         private readonly Mock<IUnitOfWork> _unitOfWork = new();
         private Mock<ILogger<TransactionsBL>> _logger = new();
         private TransactionsBL _transactionBL;
@@ -35,9 +33,9 @@ namespace Roulette.BusinessLogicTests
                 Balance = _faker.Random.Int(),
             };
 
-            bool playerDetailRepositoryGetAsyncHasBeenCalled = false;
-            _playerDetailRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>()))
-                .Callback(() => playerDetailRepositoryGetAsyncHasBeenCalled = true)
+            bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
                 .Returns(Task.FromResult(playerDetail));
 
             var playerBalanceRequest = new PlayerBalanceRequest()
@@ -50,7 +48,7 @@ namespace Roulette.BusinessLogicTests
 
             // then
             Assert.IsNotNull(result);
-            playerDetailRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+            playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
         }             
     }
 }
