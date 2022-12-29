@@ -10,24 +10,6 @@ namespace Roulette.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "GameTransactions",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    TransactionType = table.Column<string>(type: "TEXT", nullable: false),
-                    Reference = table.Column<string>(type: "TEXT", nullable: false),
-                    StakeAmount = table.Column<double>(type: "REAL", nullable: false),
-                    OutcomeAmount = table.Column<double>(type: "REAL", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    OutcomeDate = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GameTransactions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PlayerDetails",
                 columns: table => new
                 {
@@ -40,6 +22,36 @@ namespace Roulette.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_PlayerDetails", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "GameTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TransactionType = table.Column<string>(type: "TEXT", nullable: false),
+                    Reference = table.Column<string>(type: "TEXT", nullable: false),
+                    PlayerId = table.Column<long>(type: "INTEGER", nullable: false),
+                    StakeAmount = table.Column<double>(type: "REAL", nullable: false),
+                    OutcomeAmount = table.Column<double>(type: "REAL", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    OutcomeDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GameTransactions_PlayerDetails_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "PlayerDetails",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameTransactions_PlayerId",
+                table: "GameTransactions",
+                column: "PlayerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameTransactions_Reference",

@@ -32,6 +32,9 @@ namespace Roulette.DataAccess.Migrations
                     b.Property<DateTime?>("OutcomeDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<long>("PlayerId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Reference")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -44,6 +47,8 @@ namespace Roulette.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
 
                     b.HasIndex("Reference")
                         .IsUnique();
@@ -70,6 +75,17 @@ namespace Roulette.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("PlayerDetails", (string)null);
+                });
+
+            modelBuilder.Entity("Roulette.Models.GameTransaction", b =>
+                {
+                    b.HasOne("Roulette.Models.PlayerDetail", "PlayerDetail")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlayerDetail");
                 });
 #pragma warning restore 612, 618
         }

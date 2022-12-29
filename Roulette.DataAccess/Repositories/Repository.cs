@@ -98,3 +98,4 @@ namespace Roulette.DataAccess.Repositories
             dbSet.RemoveRange(entities);
         }
     }
+}
