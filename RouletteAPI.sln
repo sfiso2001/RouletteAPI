@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouletteAPI", "RouletteAPI\RouletteAPI.csproj", "{82A76D25-8846-4250-BC65-DDD9BA988D63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouletteAPI", "RouletteAPI\RouletteAPI.csproj", "{82A76D25-8846-4250-BC65-DDD9BA988D63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roulette.Models", "Roulette.Models\Roulette.Models.csproj", "{18156201-4688-4E3B-BE3B-55706A4CBE41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roulette.Models", "Roulette.Models\Roulette.Models.csproj", "{18156201-4688-4E3B-BE3B-55706A4CBE41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roulette.DataAccess", "Roulette.DataAccess\Roulette.DataAccess.csproj", "{78E606EC-E847-458D-B929-6DC7AC29DC72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roulette.DataAccess", "Roulette.DataAccess\Roulette.DataAccess.csproj", "{78E606EC-E847-458D-B929-6DC7AC29DC72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roulette.BusinessLogic", "Roulette.BusinessLogic\Roulette.BusinessLogic.csproj", "{67E2BBCF-5212-4BC2-98AC-E7D1EB727DF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roulette.BusinessLogic", "Roulette.BusinessLogic\Roulette.BusinessLogic.csproj", "{67E2BBCF-5212-4BC2-98AC-E7D1EB727DF5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanCollection", "PostmanCollection", "{8494C119-E0C1-49CC-AA5A-3E390634B3DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roulette.BusinessLogic.Tests", "Roulette.BusinessLogicTests\Roulette.BusinessLogic.Tests.csproj", "{A8CAA6C9-EA3A-435A-B156-5D4B4F42BF90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{67E2BBCF-5212-4BC2-98AC-E7D1EB727DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67E2BBCF-5212-4BC2-98AC-E7D1EB727DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67E2BBCF-5212-4BC2-98AC-E7D1EB727DF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8CAA6C9-EA3A-435A-B156-5D4B4F42BF90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8CAA6C9-EA3A-435A-B156-5D4B4F42BF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8CAA6C9-EA3A-435A-B156-5D4B4F42BF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8CAA6C9-EA3A-435A-B156-5D4B4F42BF90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
