@@ -37,9 +37,9 @@ namespace RouletteAPI.Controllers
         /// <param name="placeBetRequest"></param>
         /// <returns>PlaceBetResponse</returns>
         [HttpPost("PlaceBet")]
-        public IActionResult PlaceBet(PlaceBetRequest placeBetRequest)
+        public async Task<IActionResult> PlaceBet(PlaceBetRequest placeBetRequest)
         {
-            var placeBetResult = _transactionsBL.DebitTransactionAsync(placeBetRequest);
+            var placeBetResult = await _transactionsBL.DebitTransactionAsync(placeBetRequest);
 
             return Ok(JsonConvert.SerializeObject(placeBetResult));
         }
