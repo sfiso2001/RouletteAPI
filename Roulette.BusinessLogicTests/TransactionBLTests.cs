@@ -49,6 +49,82 @@ namespace Roulette.BusinessLogicTests
             // then
             Assert.IsNotNull(result);
             playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
-        }             
+        }
+
+        [TestMethod]
+        public async Task PlaceBet_Success_True()
+        {
+            // given
+            var playerDetail = new PlayerDetail()
+            {
+                Id = _faker.Random.Int(),
+                PlayerName = _faker.Random.String2(FAKER_STRING2_LENGTH),
+                Balance = 20,
+            };
+
+            bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(playerDetail));
+
+            bool gameTransactionAddHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.GameTransactionRepository.Add(It.IsAny<GameTransaction>()))
+                .Callback(() => gameTransactionAddHasBeenCalled = true);
+
+            bool unitOfWorkSaveHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.Save())
+                .Callback(() => unitOfWorkSaveHasBeenCalled = true);
+
+            var placeBetRequest = new PlaceBetRequest()
+            {
+                PlayerId = playerDetail.Id,
+                GameId = _faker.Random.String2(10),
+                Reference = _faker.Random.String2(20),
+                StakeAmount = 10
+            };
+
+            // when
+            var result = await _transactionBL.DebitTransactionAsync(placeBetRequest);
+
+            // then
+            Assert.IsNotNull(result);
+            playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+            gameTransactionAddHasBeenCalled.Should().BeTrue();
+            unitOfWorkSaveHasBeenCalled.Should().BeTrue();
+            result.Success.Should().BeTrue();            
+        }
+
+        [TestMethod]
+        public async Task PlaceBet_With_Low_Balance_Should_Return_Success_False()
+        {
+            // given
+            var playerDetail = new PlayerDetail()
+            {
+                Id = _faker.Random.Int(),
+                PlayerName = _faker.Random.String2(FAKER_STRING2_LENGTH),
+                Balance = 0,
+            };
+
+            bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(playerDetail));
+
+            var placeBetRequest = new PlaceBetRequest()
+            {
+                PlayerId = playerDetail.Id,
+                GameId = _faker.Random.String2(10),
+                Reference = _faker.Random.String2(20),
+                StakeAmount = 10
+            };
+
+            // when
+            var result = await _transactionBL.DebitTransactionAsync(placeBetRequest);
+
+            // then
+            Assert.IsNotNull(result);
+            playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+            result.Success.Should().BeFalse();
+        }
     }
 }

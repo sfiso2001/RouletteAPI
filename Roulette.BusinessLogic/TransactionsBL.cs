@@ -28,7 +28,8 @@ namespace Roulette.BusinessLogic
                 return new PlaceBetResponse()
                 {
                     Success = false,
-                    Message = "Player Balance not Found"
+                    Message = "Player Balance not Found",
+                    ErrorCode = ErrorType.None.ToString()                   
                 };
             }
             else
@@ -38,7 +39,8 @@ namespace Roulette.BusinessLogic
                     return new PlaceBetResponse()
                     {
                         Success = false,
-                        Message = "Player Balance Low"
+                        Message = "Player Balance Low",
+                        ErrorCode = ErrorType.PlayerBalanceLow.ToString()
                     };
                 }
 
@@ -60,7 +62,8 @@ namespace Roulette.BusinessLogic
                 return new PlaceBetResponse()
                 {
                     Success = true,
-                    Message = "Bet Placed Successfully"
+                    Message = "Bet Placed Successfully",
+                    ErrorCode = ErrorType.None.ToString()
                 };
             }
         }
@@ -101,7 +104,8 @@ namespace Roulette.BusinessLogic
                     PlayerId = playerBalanceRequest.PlayerId,
                     Balance = 0,
                     Success = false,
-                    Message = "Player Balance not Found"
+                    Message = "Player Balance not Found",
+                    ErrorCode = ErrorType.PlayerBalanceLow.ToString()
                 };
             }
             else
@@ -111,7 +115,8 @@ namespace Roulette.BusinessLogic
                     PlayerId = playerDetail.Id,
                     PlayerName = playerDetail.PlayerName,
                     Balance = playerDetail.Balance,
-                    Success = true
+                    Success = true,
+                    ErrorCode = ErrorType.None.ToString()
                 };
             }
         }

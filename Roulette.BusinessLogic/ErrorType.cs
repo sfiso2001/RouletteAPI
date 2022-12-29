@@ -8,9 +8,9 @@ namespace Roulette.BusinessLogic
 {
     public enum ErrorType
     {
-        Unknown = 0,
+        None = 0,
         PlayerIdNotFound = 1,
         PlayerBalanceLow = 2,
-        GameReferenceDuplicated = 3
+        GameReferenceDuplicated = 3       
     }
 }
