@@ -8,5 +8,11 @@ namespace RouletteAPI.Controllers
         {
             return View();
         }
+
+        [HttpGet("PlayerBalance")]
+        public double GetPlayerBalance(long playerId)
+        {
+            return 0;
+        }
     }
 }

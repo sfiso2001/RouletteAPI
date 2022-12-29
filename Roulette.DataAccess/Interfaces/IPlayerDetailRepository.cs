@@ -2,7 +2,7 @@
 
 namespace Roulette.DataAccess.Interfaces
 {
-    public interface IPlayerDetailsRepository
+    public interface IPlayerDetailRepository
     {
         void Update(PlayerDetail playerDetail);
     }

@@ -3,11 +3,11 @@ using Roulette.Models;
 
 namespace Roulette.DataAccess.Repositories
 {
-    public class PlayerDetailsRepository : Repository<PlayerDetail>, IPlayerDetailsRepository
+    public class PlayerDetailRepository : Repository<PlayerDetail>, IPlayerDetailRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public PlayerDetailsRepository(ApplicationDbContext db) : base(db)
+        public PlayerDetailRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
