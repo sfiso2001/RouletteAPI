@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Roulette.BusinessLogic;
 using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess;
 using Roulette.DataAccess.Interfaces;
 using Roulette.DataAccess.Repositories;
+using System.Reflection;
 
 namespace RouletteAPI
 {
@@ -13,6 +15,11 @@ namespace RouletteAPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            using (var client = new ApplicationDbContext())
+            {
+                client.Database.EnsureCreated();
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -20,10 +27,8 @@ namespace RouletteAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddEntityFrameworkSqlite().AddDbContext<ApplicationDbContext>();
 
-            services.AddDbContext<ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITransactionsBL, TransactionsBL>();
 

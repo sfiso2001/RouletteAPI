@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
+using System.Configuration;
 
 namespace Roulette.DataAccess
 {
@@ -12,7 +13,7 @@ namespace Roulette.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connectionString: "FileName=sqlitedb1.db", option => 
+            optionsBuilder.UseSqlite("FileName=RoultteDb.db", option =>
             {
                 option.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });

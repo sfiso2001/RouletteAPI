@@ -11,7 +11,7 @@ using Roulette.DataAccess;
 namespace Roulette.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221229143311_InitialMigration")]
+    [Migration("20221229154635_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
