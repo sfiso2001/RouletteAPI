@@ -3,6 +3,7 @@ using Roulette.BusinessLogic.DTO.Requests;
 using Roulette.BusinessLogic.DTO.Responses;
 using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess.Interfaces;
+using Roulette.Models;
 
 namespace Roulette.BusinessLogic
 {
@@ -20,15 +21,48 @@ namespace Roulette.BusinessLogic
         //Place Bet
         public PlaceBetResponse DebitTransaction(PlaceBetRequest placeBetRequest)
         {
-            //TODO: Check player balance
+            var playerDetail = _unitOfWork.PlayerDetailRepository.Get(placeBetRequest.PlayerId);
 
-            //TODO: Place bet in GameTransactions
+            if(playerDetail == null)
+            {
+                return new PlaceBetResponse()
+                {
+                    Success = false,
+                    Message = "Player Balance not Found"
+                };
+            }
+            else
+            {
+                if(playerDetail.Balance < placeBetRequest.StakeAmount)
+                {
+                    return new PlaceBetResponse()
+                    {
+                        Success = false,
+                        Message = "Player Balance Low"
+                    };
+                }
 
-            //TODO: Debit Player
+                var newTransaction = new GameTransaction(
+                    transactionType: "Bet",
+                    gameId: placeBetRequest.GameId,
+                    reference: placeBetRequest.Reference,
+                    playerId: placeBetRequest.PlayerId,
+                    stakeAmount: placeBetRequest.StakeAmount,
+                    outcomeAmount: 0,
+                    createdDate: DateTime.Now
+                    );
 
-            //TODO: Return outcome
+                //DOTO: Check if reference not duplicated
 
-            return new PlaceBetResponse();
+                _unitOfWork.GameTransactionRepository.Add(newTransaction);
+                _unitOfWork.Save();
+
+                return new PlaceBetResponse()
+                {
+                    Success = true,
+                    Message = "Bet Placed Successfully"
+                };
+            }
         }
 
         //Spin
@@ -43,7 +77,7 @@ namespace Roulette.BusinessLogic
         //Payout
         public PayoutResponse CreditPlayer(PayoutRequest payoutRequest)
         {
-            //TODO: Chekc player Balance
+            //TODO: Check Reference for updating request
 
             //TODO: Update player Balance
 

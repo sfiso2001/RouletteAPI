@@ -19,11 +19,19 @@ namespace RouletteAPI.Controllers
         }
 
         [HttpGet("PlayerBalance")]
-        public string GetPlayerBalance(PlayerBalanceRequest playerBalanceRequest)
+        public IActionResult GetPlayerBalance(PlayerBalanceRequest playerBalanceRequest)
         {
             var playerBalanceResult = _transactionsBL.PlayerBalance(playerBalanceRequest);
 
-            return JsonConvert.SerializeObject(playerBalanceResult);
+            return Ok(JsonConvert.SerializeObject(playerBalanceResult));
+        }
+
+        [HttpPost("PlaceBet")]
+        public IActionResult PlaceBet(PlaceBetRequest placeBetRequest)
+        {
+            var placeBetResult = _transactionsBL.DebitTransaction(placeBetRequest);
+
+            return Ok(JsonConvert.SerializeObject(placeBetResult));
         }
     }
 }
