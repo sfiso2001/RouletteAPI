@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Roulette.BusinessLogic.DTO.Responses
 {
-    public class ResponseBase : ErrorResponse
+    public class ErrorResponse
     {
-        public bool Success { get; set; }
-        public string Message { get; set; }
+        public string ErrorCode { get; set; }
+        public string ErrorDescription { get; set; }
     }
 }
