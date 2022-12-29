@@ -12,6 +12,7 @@ namespace Roulette.Models
     {
         public int Id { get; set; }
         public string TransactionType { get; set; }
+        public string GameId { get; set; }
         public string Reference { get; set; }
         [Required]
         public int PlayerId { get; set; }
@@ -24,14 +25,15 @@ namespace Roulette.Models
 
         public GameTransaction(
             string transactionType, 
+            string gameId,
             string reference, 
             int playerId,
             double stakeAmount,
             double outcomeAmount,
-            DateTime createdDate
-            )
+            DateTime createdDate)
         {
             TransactionType = transactionType;
+            GameId = gameId;
             Reference = reference;
             PlayerId = playerId;
             StakeAmount = stakeAmount;
@@ -41,6 +43,7 @@ namespace Roulette.Models
 
         public void SetGameTransactions(
             string transactionType,
+            string gameId,
             string reference,
             int playerId,
             double stakeAmount,
@@ -50,6 +53,7 @@ namespace Roulette.Models
             )
         {
             TransactionType = transactionType;
+            GameId = gameId;
             Reference = reference;
             PlayerId = playerId;
             StakeAmount = stakeAmount;

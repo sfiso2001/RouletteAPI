@@ -30,6 +30,7 @@ namespace Roulette.DataAccess.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     TransactionType = table.Column<string>(type: "TEXT", nullable: false),
+                    GameId = table.Column<string>(type: "TEXT", nullable: false),
                     Reference = table.Column<string>(type: "TEXT", nullable: false),
                     PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
                     StakeAmount = table.Column<double>(type: "REAL", nullable: false),

@@ -11,7 +11,7 @@ using Roulette.DataAccess;
 namespace Roulette.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221229142559_InitialMigration")]
+    [Migration("20221229143311_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,10 @@ namespace Roulette.DataAccess.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GameId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("OutcomeAmount")

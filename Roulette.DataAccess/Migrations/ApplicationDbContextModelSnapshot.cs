@@ -26,6 +26,10 @@ namespace Roulette.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("GameId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("OutcomeAmount")
                         .HasColumnType("REAL");
 
