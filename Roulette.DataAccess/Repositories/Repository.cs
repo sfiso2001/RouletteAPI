@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Roulette.DataAccess.Interfaces;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Roulette.DataAccess.Repositories
@@ -22,13 +23,13 @@ namespace Roulette.DataAccess.Repositories
         }
 
         //Get
-        public T Get(int id)
+        public async Task<T> GetAsync(int id)
         {
-            return dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }
 
         //GetAll
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>,
             IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
         {
 
@@ -49,14 +50,14 @@ namespace Roulette.DataAccess.Repositories
 
             if (orderBy != null)
             {
-                return orderBy(query).ToList();
+                return await orderBy(query).ToListAsync();
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         //GetDefaultorFisrt
-        public T GetDefaultOrFirst(Expression<Func<T, bool>> filter = null, string includeProperties = null)
+        public async Task<T> GetDefaultOrFirstAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
 
@@ -74,7 +75,7 @@ namespace Roulette.DataAccess.Repositories
             }
 
 
-            return query.FirstOrDefault();
+            return await query.FirstOrDefaultAsync();
         }
 
         //Remove

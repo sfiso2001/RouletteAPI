@@ -24,9 +24,9 @@ namespace RouletteAPI.Controllers
         /// <param name="playerBalanceRequest"></param>
         /// <returns>PLayerBalance</returns>
         [HttpGet("PlayerBalance")]
-        public IActionResult GetPlayerBalance(PlayerBalanceRequest playerBalanceRequest)
+        public async Task<IActionResult> GetPlayerBalance(PlayerBalanceRequest playerBalanceRequest)
         {
-            var playerBalanceResult = _transactionsBL.PlayerBalance(playerBalanceRequest);
+            var playerBalanceResult = await _transactionsBL.PlayerBalanceAsync(playerBalanceRequest);
 
             return Ok(JsonConvert.SerializeObject(playerBalanceResult));
         }
@@ -39,7 +39,7 @@ namespace RouletteAPI.Controllers
         [HttpPost("PlaceBet")]
         public IActionResult PlaceBet(PlaceBetRequest placeBetRequest)
         {
-            var placeBetResult = _transactionsBL.DebitTransaction(placeBetRequest);
+            var placeBetResult = _transactionsBL.DebitTransactionAsync(placeBetRequest);
 
             return Ok(JsonConvert.SerializeObject(placeBetResult));
         }

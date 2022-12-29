@@ -19,9 +19,9 @@ namespace Roulette.BusinessLogic
         }
 
         //Place Bet
-        public PlaceBetResponse DebitTransaction(PlaceBetRequest placeBetRequest)
+        public async Task<PlaceBetResponse> DebitTransactionAsync(PlaceBetRequest placeBetRequest)
         {
-            var playerDetail = _unitOfWork.PlayerDetailRepository.Get(placeBetRequest.PlayerId);
+            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(placeBetRequest.PlayerId);
 
             if(playerDetail == null)
             {
@@ -66,7 +66,7 @@ namespace Roulette.BusinessLogic
         }
 
         //Spin
-        public SpinResponse PlaySpin(SpinRequest spinRequest)
+        public async Task<SpinResponse> PlaySpinAsync(SpinRequest spinRequest)
         {
             //TODO: Update GameTransaction Status
 
@@ -75,7 +75,7 @@ namespace Roulette.BusinessLogic
         }
 
         //Payout
-        public PayoutResponse CreditPlayer(PayoutRequest payoutRequest)
+        public async Task<PayoutResponse> CreditPlayerAsync(PayoutRequest payoutRequest)
         {
             //TODO: Check Reference for updating request
 
@@ -90,14 +90,16 @@ namespace Roulette.BusinessLogic
             //TODO: Show Spin for Reference
         }
 
-        public PlayerBalanceResponse PlayerBalance(PlayerBalanceRequest playerBalanceRequest)
+        public async Task<PlayerBalanceResponse> PlayerBalanceAsync(PlayerBalanceRequest playerBalanceRequest)
         {
-            var playerDetail = _unitOfWork.PlayerDetailRepository.Get(playerBalanceRequest.PlayerId);
+            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(playerBalanceRequest.PlayerId);
 
             if (playerDetail == null)
             {
                 return new PlayerBalanceResponse()
                 {
+                    PlayerId = playerBalanceRequest.PlayerId,
+                    Balance = 0,
                     Success = false,
                     Message = "Player Balance not Found"
                 };
@@ -106,6 +108,8 @@ namespace Roulette.BusinessLogic
             {
                 return new PlayerBalanceResponse()
                 {
+                    PlayerId = playerDetail.Id,
+                    PlayerName = playerDetail.PlayerName,
                     Balance = playerDetail.Balance,
                     Success = true
                 };

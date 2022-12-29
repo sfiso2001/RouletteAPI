@@ -5,10 +5,10 @@ namespace Roulette.BusinessLogic.Interfaces
 {
     public interface ITransactionsBL
     {
-        PayoutResponse CreditPlayer(PayoutRequest payoutRequest);
-        PlaceBetResponse DebitTransaction(PlaceBetRequest placeBetRequest);
-        SpinResponse PlaySpin(SpinRequest spinRequest);
+        Task<PayoutResponse> CreditPlayerAsync(PayoutRequest payoutRequest);
+        Task<PlaceBetResponse> DebitTransactionAsync(PlaceBetRequest placeBetRequest);
+        Task<SpinResponse> PlaySpinAsync(SpinRequest spinRequest);
         void ShowTransactions();
-        PlayerBalanceResponse PlayerBalance(PlayerBalanceRequest playerBalanceRequest);
+        Task<PlayerBalanceResponse> PlayerBalanceAsync(PlayerBalanceRequest playerBalanceRequest);
     }
 }
