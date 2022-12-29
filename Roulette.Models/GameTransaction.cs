@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Roulette.Models.Common;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Roulette.Models
 {
@@ -32,13 +28,13 @@ namespace Roulette.Models
             double outcomeAmount,
             DateTime createdDate)
         {
-            TransactionType = transactionType;
-            GameId = gameId;
-            Reference = reference;
-            PlayerId = playerId;
-            StakeAmount = stakeAmount;
+            TransactionType = transactionType.AssertIsNotNull(nameof(transactionType));
+            GameId = gameId.AssertIsNotNull(nameof(gameId));
+            Reference = reference.AssertIsNotNull(nameof(reference));
+            PlayerId = playerId.AssertIsNotNull(nameof(playerId));
+            StakeAmount = stakeAmount.AssertIsNotNull(nameof(stakeAmount));
             OutcomeAmount = outcomeAmount;
-            CreatedDate = createdDate;
+            CreatedDate = createdDate.AssertIsNotNull(nameof(createdDate));
         }
 
         public void SetGameTransactions(
@@ -48,7 +44,6 @@ namespace Roulette.Models
             int playerId,
             double stakeAmount,
             double outcomeAmount,
-            DateTime createdDate,
             DateTime? outcomeDate
             )
         {
@@ -58,7 +53,6 @@ namespace Roulette.Models
             PlayerId = playerId;
             StakeAmount = stakeAmount;
             OutcomeAmount = outcomeAmount;
-            CreatedDate = createdDate;
             OutcomeDate = outcomeDate;
         }
     }
