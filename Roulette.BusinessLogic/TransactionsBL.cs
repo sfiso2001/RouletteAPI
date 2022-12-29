@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Roulette.BusinessLogic.DTO.Requests;
+using Roulette.BusinessLogic.DTO.Responses;
+using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Roulette.BusinessLogic
 {
-    public class TransactionsBL
+    public class TransactionsBL : ITransactionsBL
     {
         private readonly ILogger _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -20,7 +23,7 @@ namespace Roulette.BusinessLogic
         }
 
         //Place Bet
-        public void DebitTransaction()
+        public PlaceBetResponse DebitTransaction(PlaceBetRequest placeBetRequest)
         {
             //TODO: Check player balance
 
@@ -29,22 +32,27 @@ namespace Roulette.BusinessLogic
             //TODO: Debit Player
 
             //TODO: Return outcome
+
+            return new PlaceBetResponse();
         }
 
         //Spin
-        public void PlaySpin()
+        public SpinResponse PlaySpin(SpinRequest spinRequest)
         {
             //TODO: Update GameTransaction Status
 
             //TODO: Return game Outcome
+            return new SpinResponse();
         }
 
         //Payout
-        public void CreditPlayer()
+        public PayoutResponse CreditPlayer(PayoutRequest payoutRequest)
         {
             //TODO: Chekc player Balance
 
             //TODO: Update player Balance
+
+            return new PayoutResponse();
         }
 
         //ShowPreviousSpins
@@ -53,12 +61,30 @@ namespace Roulette.BusinessLogic
             //TODO: Show Spin for Reference
         }
 
-        private double PlayerBalance(long playerId)
+        public PlayerBalanceResponse PlayerBalance(PlayerBalanceRequest playerBalanceRequest)
         {
             //TODO: Validate playerId
 
+
             //TODO: Return Player balance if Found
-            return 0;
+            var playerDetail = _unitOfWork.PlayerDetailRepository.Get(playerBalanceRequest.PlayerId);
+
+            if (playerDetail == null)
+            {
+                return new PlayerBalanceResponse()
+                {
+                    Success = false,
+                    Message = "Player Balance not Found"
+                };
+            }
+            else
+            {
+                return new PlayerBalanceResponse()
+                {
+                    Balance = playerDetail.Balance,
+                    Success = true
+                };
+            }
         }
     }
 }

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Roulette.BusinessLogic\Roulette.BusinessLogic.csproj" />
     <ProjectReference Include="..\Roulette.DataAccess\Roulette.DataAccess.csproj" />
     <ProjectReference Include="..\Roulette.Models\Roulette.Models.csproj" />
   </ItemGroup>

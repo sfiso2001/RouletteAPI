@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Roulette.BusinessLogic;
+using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess;
+using Roulette.DataAccess.Interfaces;
+using Roulette.DataAccess.Repositories;
 
 namespace RouletteAPI
 {
@@ -20,8 +24,8 @@ namespace RouletteAPI
             //options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<ApplicationDbContext>();
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
-            //services.AddScoped<IAppointmentManagerBL, AppointmentManagerBL>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ITransactionsBL, TransactionsBL>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

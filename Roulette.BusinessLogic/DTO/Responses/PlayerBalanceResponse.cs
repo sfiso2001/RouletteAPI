@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Roulette.Models
+namespace Roulette.BusinessLogic.DTO.Responses
 {
-    public class PlayerDetail
+    public class PlayerBalanceResponse : ResponseBase
     {
-        public int Id { get; set; }
+        public int PlayerId { get; set; }
         public string PlayerName { get; set; }
         public double Balance { get; set; }
     }

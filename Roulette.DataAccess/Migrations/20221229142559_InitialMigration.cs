@@ -13,7 +13,7 @@ namespace Roulette.DataAccess.Migrations
                 name: "PlayerDetails",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PlayerName = table.Column<string>(type: "TEXT", nullable: false),
                     Balance = table.Column<double>(type: "REAL", nullable: false)
@@ -27,11 +27,11 @@ namespace Roulette.DataAccess.Migrations
                 name: "GameTransactions",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     TransactionType = table.Column<string>(type: "TEXT", nullable: false),
                     Reference = table.Column<string>(type: "TEXT", nullable: false),
-                    PlayerId = table.Column<long>(type: "INTEGER", nullable: false),
+                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
                     StakeAmount = table.Column<double>(type: "REAL", nullable: false),
                     OutcomeAmount = table.Column<double>(type: "REAL", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),

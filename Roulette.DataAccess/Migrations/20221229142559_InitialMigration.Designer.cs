@@ -11,7 +11,7 @@ using Roulette.DataAccess;
 namespace Roulette.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221229075308_InitialMigration")]
+    [Migration("20221229142559_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace Roulette.DataAccess.Migrations
 
             modelBuilder.Entity("Roulette.Models.GameTransaction", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -34,7 +34,7 @@ namespace Roulette.DataAccess.Migrations
                     b.Property<DateTime?>("OutcomeDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("PlayerId")
+                    b.Property<int>("PlayerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Reference")
@@ -60,7 +60,7 @@ namespace Roulette.DataAccess.Migrations
 
             modelBuilder.Entity("Roulette.Models.PlayerDetail", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 

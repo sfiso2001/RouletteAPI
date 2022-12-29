@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Roulette.BusinessLogic.DTO.Requests
 {
-    public class PayoutRequest
+    public class PlayerBalanceRequest
     {
-        public string GameId { get; set; }
-        public string Reference { get; set; }
         public int PlayerId { get; set; }
-        public double PayoutAmount { get; set; }
     }
 }

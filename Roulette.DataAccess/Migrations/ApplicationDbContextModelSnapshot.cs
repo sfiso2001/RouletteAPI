@@ -19,7 +19,7 @@ namespace Roulette.DataAccess.Migrations
 
             modelBuilder.Entity("Roulette.Models.GameTransaction", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -32,7 +32,7 @@ namespace Roulette.DataAccess.Migrations
                     b.Property<DateTime?>("OutcomeDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("PlayerId")
+                    b.Property<int>("PlayerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Reference")
@@ -58,7 +58,7 @@ namespace Roulette.DataAccess.Migrations
 
             modelBuilder.Entity("Roulette.Models.PlayerDetail", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
