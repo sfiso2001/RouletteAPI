@@ -18,6 +18,11 @@ namespace RouletteAPI.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Method to get player details including current balance, player name and unique Id
+        /// </summary>
+        /// <param name="playerBalanceRequest"></param>
+        /// <returns>PLayerBalance</returns>
         [HttpGet("PlayerBalance")]
         public IActionResult GetPlayerBalance(PlayerBalanceRequest playerBalanceRequest)
         {
@@ -26,6 +31,11 @@ namespace RouletteAPI.Controllers
             return Ok(JsonConvert.SerializeObject(playerBalanceResult));
         }
 
+        /// <summary>
+        /// Method to place player bet.
+        /// </summary>
+        /// <param name="placeBetRequest"></param>
+        /// <returns>PlaceBetResponse</returns>
         [HttpPost("PlaceBet")]
         public IActionResult PlaceBet(PlaceBetRequest placeBetRequest)
         {

@@ -92,10 +92,6 @@ namespace Roulette.BusinessLogic
 
         public PlayerBalanceResponse PlayerBalance(PlayerBalanceRequest playerBalanceRequest)
         {
-            //TODO: Validate playerId
-
-
-            //TODO: Return Player balance if Found
             var playerDetail = _unitOfWork.PlayerDetailRepository.Get(playerBalanceRequest.PlayerId);
 
             if (playerDetail == null)
