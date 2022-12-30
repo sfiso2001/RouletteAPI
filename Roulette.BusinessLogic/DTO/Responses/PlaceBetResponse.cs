@@ -8,6 +8,8 @@ namespace Roulette.BusinessLogic.DTO.Responses
 {
     public class PlaceBetResponse : ResponseBase
     {
-
+        public string GameId { get; set; }
+        public int PlayerId { get; set; }
+        public double StakeAmount { get; set; }
     }
 }

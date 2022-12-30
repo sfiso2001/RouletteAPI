@@ -6,6 +6,7 @@ using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess.Interfaces;
 using Roulette.Models;
 using Roulette.Models.Common;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Roulette.BusinessLogic
 {
@@ -31,6 +32,9 @@ namespace Roulette.BusinessLogic
             {
                 return new PlaceBetResponse()
                 {
+                    GameId = placeBetRequest.GameId,
+                    PlayerId = placeBetRequest.PlayerId,
+                    StakeAmount = placeBetRequest.StakeAmount,
                     Success = false,
                     Message = "Player Balance not Found",
                     ErrorCode = ErrorType.None.ToString()                   
@@ -42,6 +46,9 @@ namespace Roulette.BusinessLogic
                 {
                     return new PlaceBetResponse()
                     {
+                        GameId = placeBetRequest.GameId,
+                        PlayerId = placeBetRequest.PlayerId,
+                        StakeAmount = placeBetRequest.StakeAmount,
                         Success = false,
                         Message = "Player Balance Low",
                         ErrorCode = ErrorType.PlayerBalanceLow.ToString()
@@ -60,12 +67,33 @@ namespace Roulette.BusinessLogic
                     );
 
                 //DOTO: Check if reference not duplicated
+                var existingBets = await _unitOfWork.GameTransactionRepository.GetAllAsync(
+                    filter: x => (x.Reference == placeBetRequest.Reference)
+                && (x.TransactionType == TransactionType.Bet.ToString()));
+
+                if(existingBets.Any())
+                {
+                    return new PlaceBetResponse()
+                    {
+                        GameId = placeBetRequest.GameId,
+                        PlayerId = placeBetRequest.PlayerId,
+                        StakeAmount = placeBetRequest.StakeAmount,
+                        Success = false,
+                        Message = "Bet Reference Already Exists",
+                        ErrorCode = ErrorType.GameReferenceDuplicated.ToString()
+                    };
+                }
 
                 _unitOfWork.GameTransactionRepository.Add(newTransaction);
+                playerDetail.Balance = playerDetail.Balance - placeBetRequest.StakeAmount;
+                _unitOfWork.PlayerDetailRepository.Update(playerDetail);
                 _unitOfWork.Save();
 
                 return new PlaceBetResponse()
                 {
+                    GameId = placeBetRequest.GameId,
+                    PlayerId = placeBetRequest.PlayerId,
+                    StakeAmount = placeBetRequest.StakeAmount,
                     Success = true,
                     Message = "Bet Placed Successfully",
                     ErrorCode = ErrorType.None.ToString()

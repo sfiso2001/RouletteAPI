@@ -19,7 +19,8 @@ namespace Roulette.DataAccess.Repositories
 
             if (playerDetailsFromDb != null)
             {
-                //TODO:- Update all properties, most likely player balance
+                playerDetailsFromDb.PlayerName = playerDetail.PlayerName;
+                playerDetailsFromDb.Balance = playerDetail.Balance;                
             }
         }
     }
