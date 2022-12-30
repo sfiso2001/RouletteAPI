@@ -52,6 +52,7 @@ namespace Roulette.BusinessLogic
                     transactionType: TransactionType.Bet.ToString(),
                     gameId: placeBetRequest.GameId,
                     reference: placeBetRequest.Reference,
+                    spinReference: placeBetRequest.Reference,
                     playerId: placeBetRequest.PlayerId,
                     stakeAmount: placeBetRequest.StakeAmount,
                     outcomeAmount: 0,

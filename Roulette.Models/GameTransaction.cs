@@ -10,6 +10,7 @@ namespace Roulette.Models
         public string TransactionType { get; set; }
         public string GameId { get; set; }
         public string Reference { get; set; }
+        public string SpinReference { get; set; }
         [Required]
         public int PlayerId { get; set; }
         [ForeignKey("PlayerId")]
@@ -23,6 +24,7 @@ namespace Roulette.Models
             string transactionType, 
             string gameId,
             string reference, 
+            string spinReference,
             int playerId,
             double stakeAmount,
             double outcomeAmount,
@@ -31,6 +33,7 @@ namespace Roulette.Models
             TransactionType = transactionType.AssertIsNotNull(nameof(transactionType));
             GameId = gameId.AssertIsNotNull(nameof(gameId));
             Reference = reference.AssertIsNotNull(nameof(reference));
+            SpinReference = spinReference.AssertIsNotNull(nameof(spinReference));
             PlayerId = playerId.AssertIsNotNull(nameof(playerId));
             StakeAmount = stakeAmount.AssertIsNotNull(nameof(stakeAmount));
             OutcomeAmount = outcomeAmount;
@@ -41,6 +44,7 @@ namespace Roulette.Models
             string transactionType,
             string gameId,
             string reference,
+            string spinReference,
             int playerId,
             double stakeAmount,
             double outcomeAmount,
@@ -50,6 +54,7 @@ namespace Roulette.Models
             TransactionType = transactionType;
             GameId = gameId;
             Reference = reference;
+            SpinReference = spinReference;
             PlayerId = playerId;
             StakeAmount = stakeAmount;
             OutcomeAmount = outcomeAmount;
