@@ -66,7 +66,6 @@ namespace Roulette.BusinessLogic
                     createdDate: DateTime.Now
                     );
 
-                //DOTO: Check if reference not duplicated
                 var existingBets = await _unitOfWork.GameTransactionRepository.GetAllAsync(
                     filter: x => (x.Reference == placeBetRequest.Reference)
                 && (x.TransactionType == TransactionType.Bet.ToString()));
@@ -105,10 +104,67 @@ namespace Roulette.BusinessLogic
         public async Task<SpinResponse> PlaySpinAsync(SpinRequest spinRequest)
         {
             spinRequest.AssertIsNotNull(nameof(spinRequest));
-            //TODO: Update GameTransaction Status
 
-            //TODO: Return game Outcome
-            return new SpinResponse();
+            var existingBet = await _unitOfWork.GameTransactionRepository.GetAllAsync(
+                    filter: x => (x.Reference == spinRequest.Reference)
+                && (x.TransactionType == TransactionType.Bet.ToString()));
+
+            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(spinRequest.PlayerId);
+
+            if (!existingBet.Any())
+            {
+                return new SpinResponse()
+                {
+                    GameId = spinRequest.GameId,
+                    PlayerId = spinRequest.PlayerId,
+                    WinAmount = spinRequest.WinAmount,
+                    Success = false,
+                    ErrorCode = ErrorType.GameReferenceNotFound.ToString(),
+                    Message = "Initial Bet Not Found"
+                };
+            }
+
+            var gameTransactionFromDb = await _unitOfWork.GameTransactionRepository.GetAsync(existingBet.FirstOrDefault().Id);
+
+            var spinGameTransaction = new GameTransaction(
+                transactionType: TransactionType.Spin.ToString(),
+                gameId: gameTransactionFromDb.GameId,
+                reference: gameTransactionFromDb.Reference,
+                spinReference: await NextSpinReferenceAsync(gameTransactionFromDb.Reference),
+                playerId: spinRequest.PlayerId,
+                stakeAmount: gameTransactionFromDb.StakeAmount,
+                outcomeAmount: spinRequest.WinAmount,
+                createdDate: gameTransactionFromDb.CreatedDate
+                );
+
+            _unitOfWork.GameTransactionRepository.Add(spinGameTransaction);
+            _unitOfWork.Save();
+
+            return new SpinResponse()
+            {
+                GameId = spinRequest.GameId,
+                PlayerId = spinRequest.PlayerId,
+                WinAmount = spinRequest.WinAmount,
+                Success = true,
+                ErrorCode = ErrorType.None.ToString(),
+                Message = "Spin updated successfully"
+            };
+        }
+
+        private async Task<string> NextSpinReferenceAsync(string betReference)
+        {
+            var currentSpinGameTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
+                filter: x => (x.Reference == betReference)
+                && (x.TransactionType == TransactionType.Spin.ToString()));
+
+            int nextReferentNumber = 1;
+            
+            if(currentSpinGameTransactions != null)
+            {
+                nextReferentNumber = currentSpinGameTransactions.Count() + 1;
+            }
+
+            return betReference + "-" +nextReferentNumber.ToString();
         }
 
         //Payout
@@ -123,7 +179,7 @@ namespace Roulette.BusinessLogic
         }
 
         //ShowPreviousSpins
-        public async Task<List<BetTransactionsResponse>> ShowPreviousSpins(string betReference)
+        public async Task<List<BetTransactionsResponse>> ShowPreviousSpinsAsync(string betReference)
         {
             var betTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
                 filter: x => (x.Reference == betReference) 

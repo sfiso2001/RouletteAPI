@@ -44,10 +44,23 @@ namespace RouletteAPI.Controllers
             return Ok(JsonConvert.SerializeObject(placeBetResult));
         }
 
+        /// <summary>
+        /// Method to play Spin for an intial Bet
+        /// </summary>
+        /// <param name="spinRequest"></param>
+        /// <returns>SpinResponse Object</returns>
+        [HttpPost("Spin")]
+        public async Task<IActionResult> Spin(SpinRequest spinRequest)
+        {
+            var spinResult = await _transactionsBL.PlaySpinAsync(spinRequest);
+
+            return Ok(JsonConvert.SerializeObject(spinResult));
+        }
+
         [HttpGet("PreviousSpins")]
         public async Task<IActionResult> ShowPreviousSpins(string reference)
         {
-            var previousSpins = await _transactionsBL.ShowPreviousSpins(reference);
+            var previousSpins = await _transactionsBL.ShowPreviousSpinsAsync(reference);
 
             return Ok(JsonConvert.SerializeObject(previousSpins));
         }

@@ -11,6 +11,7 @@ namespace Roulette.BusinessLogic.Enums
         None = 0,
         PlayerIdNotFound = 1,
         PlayerBalanceLow = 2,
-        GameReferenceDuplicated = 3
+        GameReferenceDuplicated = 3,
+        GameReferenceNotFound = 4
     }
 }

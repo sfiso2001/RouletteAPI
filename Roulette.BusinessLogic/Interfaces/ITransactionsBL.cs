@@ -8,7 +8,7 @@ namespace Roulette.BusinessLogic.Interfaces
         Task<PayoutResponse> CreditPlayerAsync(PayoutRequest payoutRequest);
         Task<PlaceBetResponse> DebitTransactionAsync(PlaceBetRequest placeBetRequest);
         Task<SpinResponse> PlaySpinAsync(SpinRequest spinRequest);
-        Task<List<BetTransactionsResponse>> ShowPreviousSpins(string betReference);
+        Task<List<BetTransactionsResponse>> ShowPreviousSpinsAsync(string betReference);
         Task<PlayerBalanceResponse> PlayerBalanceAsync(PlayerBalanceRequest playerBalanceRequest);
     }
 }
