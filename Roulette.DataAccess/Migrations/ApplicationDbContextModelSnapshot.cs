@@ -54,9 +54,6 @@ namespace Roulette.DataAccess.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.HasIndex("Reference")
-                        .IsUnique();
-
                     b.ToTable("GameTransactions", (string)null);
                 });
 

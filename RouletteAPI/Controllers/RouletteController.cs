@@ -43,5 +43,13 @@ namespace RouletteAPI.Controllers
 
             return Ok(JsonConvert.SerializeObject(placeBetResult));
         }
+
+        [HttpGet("PreviousSpins")]
+        public async Task<IActionResult> ShowPreviousSpins(string reference)
+        {
+            var previousSpins = await _transactionsBL.ShowPreviousSpins(reference);
+
+            return Ok(JsonConvert.SerializeObject(previousSpins));
+        }
     }
 }

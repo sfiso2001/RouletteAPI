@@ -11,8 +11,8 @@ using Roulette.DataAccess;
 namespace Roulette.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221229154635_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20221230155953_initialDBmigration")]
+    partial class initialDBmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,9 +55,6 @@ namespace Roulette.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PlayerId");
-
-                    b.HasIndex("Reference")
-                        .IsUnique();
 
                     b.ToTable("GameTransactions", (string)null);
                 });

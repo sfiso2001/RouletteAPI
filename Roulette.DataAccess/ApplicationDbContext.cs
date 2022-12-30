@@ -13,7 +13,7 @@ namespace Roulette.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("FileName=RoultteDb.db", option =>
+            optionsBuilder.UseSqlite("FileName=RouletteDb.db", option =>
             {
                 option.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });
@@ -34,7 +34,6 @@ namespace Roulette.DataAccess
             modelBuilder.Entity<GameTransaction>(entity =>
             {
                 entity.HasKey(x => x.Id);
-                entity.HasIndex(x => x.Reference).IsUnique();
 
             });
 
