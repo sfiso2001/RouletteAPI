@@ -6,7 +6,6 @@ using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess.Interfaces;
 using Roulette.Models;
 using Roulette.Models.Common;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Roulette.BusinessLogic
 {
@@ -19,6 +18,36 @@ namespace Roulette.BusinessLogic
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+        }
+
+        public async Task<PlayerBalanceResponse> PlayerBalanceAsync(PlayerBalanceRequest playerBalanceRequest)
+        {
+            playerBalanceRequest.AssertIsNotNull(nameof(playerBalanceRequest));
+
+            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(playerBalanceRequest.PlayerId);
+
+            if (playerDetail == null)
+            {
+                return new PlayerBalanceResponse()
+                {
+                    PlayerId = playerBalanceRequest.PlayerId,
+                    Balance = 0,
+                    Success = false,
+                    Message = "Player Balance not Found",
+                    ErrorCode = ErrorType.PlayerBalanceLow.ToString()
+                };
+            }
+            else
+            {
+                return new PlayerBalanceResponse()
+                {
+                    PlayerId = playerDetail.Id,
+                    PlayerName = playerDetail.PlayerName,
+                    Balance = playerDetail.Balance,
+                    Success = true,
+                    ErrorCode = ErrorType.None.ToString()
+                };
+            }
         }
 
         //Place Bet
@@ -151,6 +180,60 @@ namespace Roulette.BusinessLogic
             };
         }
 
+        //Payout
+        public async Task<PayoutResponse> CreditPlayerAsync(PayoutRequest payoutRequest)
+        {
+            payoutRequest.AssertIsNotNull(nameof(payoutRequest));
+
+            var existingBet = await _unitOfWork.GameTransactionRepository.GetAllAsync(
+                filter: x => (x.Reference == payoutRequest.Reference)
+            && (x.TransactionType == TransactionType.Bet.ToString()));
+
+            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(payoutRequest.PlayerId);
+
+            if (!existingBet.Any())
+            {
+                return new PayoutResponse()
+                {
+                    GameId = payoutRequest.GameId,
+                    PlayerId = payoutRequest.PlayerId,
+                    Reference = payoutRequest.Reference,
+                    Success = false,
+                    ErrorCode = ErrorType.GameReferenceNotFound.ToString(),
+                    Message = "Initial Bet Not Found"
+                };
+            }
+
+            var gamePayout = await GetGameTransactionPayoutAsync(payoutRequest.Reference);
+
+            var gameTransactionFromDb = await _unitOfWork.GameTransactionRepository.GetAsync(existingBet.FirstOrDefault().Id);
+
+            gameTransactionFromDb.OutcomeAmount = gamePayout;
+            gameTransactionFromDb.OutcomeDate = DateTime.Now;
+
+            _unitOfWork.GameTransactionRepository.Update(gameTransactionFromDb);
+            _unitOfWork.Save();
+
+            return new PayoutResponse()
+            {
+                GameId = payoutRequest.GameId,
+                Reference = payoutRequest.Reference,
+                PlayerId = payoutRequest.PlayerId,
+                Success = true,
+                ErrorCode = ErrorType.None.ToString()
+            };
+        }
+
+        //ShowPreviousSpins
+        public async Task<List<BetTransactionsResponse>> ShowPreviousSpinsAsync(string betReference)
+        {
+            var betTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
+                filter: x => (x.Reference == betReference)
+                && (x.TransactionType == TransactionType.Spin.ToString()));
+
+            return MapBetTransactions(betTransactions);
+        }
+
         private async Task<string> NextSpinReferenceAsync(string betReference)
         {
             var currentSpinGameTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
@@ -166,26 +249,16 @@ namespace Roulette.BusinessLogic
 
             return betReference + "-" +nextReferentNumber.ToString();
         }
-
-        //Payout
-        public async Task<PayoutResponse> CreditPlayerAsync(PayoutRequest payoutRequest)
-        {
-            payoutRequest.AssertIsNotNull(nameof(payoutRequest));
-            //TODO: Check Reference for updating request
-
-            //TODO: Update player Balance
-
-            return new PayoutResponse();
-        }
-
-        //ShowPreviousSpins
-        public async Task<List<BetTransactionsResponse>> ShowPreviousSpinsAsync(string betReference)
+       
+        private async Task<double> GetGameTransactionPayoutAsync(string betReference)
         {
             var betTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
-                filter: x => (x.Reference == betReference) 
+                filter: x => (x.Reference == betReference)
                 && (x.TransactionType == TransactionType.Spin.ToString()));
 
-            return MapBetTransactions(betTransactions);
+            var totalPayout = betTransactions.Sum(x => x.OutcomeAmount);
+
+            return totalPayout;
         }
 
         private List<BetTransactionsResponse> MapBetTransactions(IEnumerable<GameTransaction> gameList)
@@ -207,36 +280,6 @@ namespace Roulette.BusinessLogic
                     Success = true
                 }                 
                 ).ToList().AsReadOnly());
-        }
-
-        public async Task<PlayerBalanceResponse> PlayerBalanceAsync(PlayerBalanceRequest playerBalanceRequest)
-        {
-            playerBalanceRequest.AssertIsNotNull(nameof(playerBalanceRequest));
-
-            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(playerBalanceRequest.PlayerId);
-
-            if (playerDetail == null)
-            {
-                return new PlayerBalanceResponse()
-                {
-                    PlayerId = playerBalanceRequest.PlayerId,
-                    Balance = 0,
-                    Success = false,
-                    Message = "Player Balance not Found",
-                    ErrorCode = ErrorType.PlayerBalanceLow.ToString()
-                };
-            }
-            else
-            {
-                return new PlayerBalanceResponse()
-                {
-                    PlayerId = playerDetail.Id,
-                    PlayerName = playerDetail.PlayerName,
-                    Balance = playerDetail.Balance,
-                    Success = true,
-                    ErrorCode = ErrorType.None.ToString()
-                };
-            }
-        }
+        }        
     }
 }

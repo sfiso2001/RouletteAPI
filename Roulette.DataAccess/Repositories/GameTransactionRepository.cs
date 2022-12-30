@@ -19,7 +19,8 @@ namespace Roulette.DataAccess.Repositories
 
             if (gameTransactionFromDb != null)
             {
-                //TODO:- Update all properties
+                gameTransactionFromDb.OutcomeAmount = gameTransaction.OutcomeAmount;
+                gameTransactionFromDb.OutcomeDate = gameTransaction.OutcomeDate;
             }
         }
     }

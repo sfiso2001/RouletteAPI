@@ -57,6 +57,19 @@ namespace RouletteAPI.Controllers
             return Ok(JsonConvert.SerializeObject(spinResult));
         }
 
+        /// <summary>
+        /// Method to Payout Player
+        /// </summary>
+        /// <param name="payoutRequest"></param>
+        /// <returns>PayoutResponse Object</returns>
+        [HttpPost("Payout")]
+        public async Task<IActionResult> Payout(PayoutRequest payoutRequest)
+        {
+            var payoutResult = await _transactionsBL.CreditPlayerAsync(payoutRequest);
+
+            return Ok(JsonConvert.SerializeObject(payoutResult));
+        }
+
         [HttpGet("PreviousSpins")]
         public async Task<IActionResult> ShowPreviousSpins(string reference)
         {

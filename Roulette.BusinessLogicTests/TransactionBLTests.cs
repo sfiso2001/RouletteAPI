@@ -126,5 +126,38 @@ namespace Roulette.BusinessLogicTests
             playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
             result.Success.Should().BeFalse();
         }
+
+        //[TestMethod]
+        //public async Task Spin_With_No_Initial_Bet_Should_Return_Success_False()
+        //{
+        //    // given
+        //    var playerDetail = new PlayerDetail()
+        //    {
+        //        Id = _faker.Random.Int(),
+        //        PlayerName = _faker.Random.String2(FAKER_STRING2_LENGTH),
+        //        Balance = 0,
+        //    };
+
+        //    bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+        //    _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+        //        .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
+        //        .Returns(Task.FromResult(playerDetail));
+
+        //    var spinRequest = new SpinRequest()
+        //    {
+        //        PlayerId = playerDetail.Id,
+        //        GameId = _faker.Random.String2(10),
+        //        Reference = _faker.Random.String2(20),
+        //        WinAmount = 10
+        //    };
+
+        //    // when
+        //    var result = await _transactionBL.PlaySpinAsync(spinRequest);
+
+        //    // then
+        //    Assert.IsNotNull(result);
+        //    playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+        //    result.Success.Should().BeFalse();
+        //}
     }
 }
