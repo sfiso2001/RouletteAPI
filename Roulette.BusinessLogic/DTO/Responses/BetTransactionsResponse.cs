@@ -15,6 +15,7 @@ namespace Roulette.BusinessLogic.DTO.Responses
         public string TransactionType { get; set; }
         public string GameId { get; set; }
         public string Reference { get; set; }
+        public string SpinReference { get; set; }
         public int PlayerId { get; set; }
         public string PlayerName { get; set; }
         public double StakeAmount { get; set; }

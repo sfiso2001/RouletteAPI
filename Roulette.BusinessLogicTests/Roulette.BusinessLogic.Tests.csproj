@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Roulette.BusinessLogic\Roulette.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Roulette.Common\Roulette.Common.csproj" />
     <ProjectReference Include="..\Roulette.DataAccess\Roulette.DataAccess.csproj" />
   </ItemGroup>
 

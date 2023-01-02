@@ -1,5 +1,8 @@
-﻿using Roulette.DataAccess.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Roulette.Common.Enums;
+using Roulette.DataAccess.Interfaces;
 using Roulette.Models;
+using System.Net;
 
 namespace Roulette.DataAccess.Repositories
 {
@@ -23,5 +26,27 @@ namespace Roulette.DataAccess.Repositories
                 gameTransactionFromDb.OutcomeDate = gameTransaction.OutcomeDate;
             }
         }
+
+        public async Task<IEnumerable<GameTransaction>> GameTransactionBetsByReference(string betReference)
+        {
+            var gameTransactionsByReference = await _db.GameTransactions
+                .Where(x => x.Reference == betReference
+                        && x.TransactionType == TransactionType.Bet.ToString())
+                .ToListAsync();
+
+            return gameTransactionsByReference;
+        }
+
+        public async Task<IEnumerable<GameTransaction>> GameTransactionSpinsByReference(string betReference)
+        {
+            var gameTransactionsByReference = await _db.GameTransactions
+                .Where(x => x.Reference == betReference 
+                            && x.TransactionType == TransactionType.Spin.ToString())
+                .ToListAsync();
+
+            return gameTransactionsByReference;
+        }
+
+
     }
 }

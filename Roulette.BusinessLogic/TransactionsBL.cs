@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Roulette.BusinessLogic.DTO.Requests;
 using Roulette.BusinessLogic.DTO.Responses;
-using Roulette.BusinessLogic.Enums;
+using Roulette.Common.Enums;
 using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess.Interfaces;
 using Roulette.Models;
@@ -134,11 +134,7 @@ namespace Roulette.BusinessLogic
         {
             spinRequest.AssertIsNotNull(nameof(spinRequest));
 
-            var existingBet = await _unitOfWork.GameTransactionRepository.GetAllAsync(
-                    filter: x => (x.Reference == spinRequest.Reference)
-                && (x.TransactionType == TransactionType.Bet.ToString()));
-
-            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(spinRequest.PlayerId);
+            var existingBet = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReference(spinRequest.Reference);
 
             if (!existingBet.Any())
             {
@@ -185,11 +181,7 @@ namespace Roulette.BusinessLogic
         {
             payoutRequest.AssertIsNotNull(nameof(payoutRequest));
 
-            var existingBet = await _unitOfWork.GameTransactionRepository.GetAllAsync(
-                filter: x => (x.Reference == payoutRequest.Reference)
-            && (x.TransactionType == TransactionType.Bet.ToString()));
-
-            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(payoutRequest.PlayerId);
+            var existingBet = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReference(payoutRequest.Reference);
 
             if (!existingBet.Any())
             {
@@ -227,18 +219,14 @@ namespace Roulette.BusinessLogic
         //ShowPreviousSpins
         public async Task<List<BetTransactionsResponse>> ShowPreviousSpinsAsync(string betReference)
         {
-            var betTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
-                filter: x => (x.Reference == betReference)
-                && (x.TransactionType == TransactionType.Spin.ToString()));
-
+            var betTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReference(betReference);
+    
             return MapBetTransactions(betTransactions);
         }
 
         private async Task<string> NextSpinReferenceAsync(string betReference)
         {
-            var currentSpinGameTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
-                filter: x => (x.Reference == betReference)
-                && (x.TransactionType == TransactionType.Spin.ToString()));
+            var currentSpinGameTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReference(betReference); ;
 
             int nextReferentNumber = 1;
             
@@ -252,9 +240,7 @@ namespace Roulette.BusinessLogic
        
         private async Task<double> GetGameTransactionPayoutAsync(string betReference)
         {
-            var betTransactions = await _unitOfWork.GameTransactionRepository.GetAllAsync(
-                filter: x => (x.Reference == betReference)
-                && (x.TransactionType == TransactionType.Spin.ToString()));
+            var betTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReference(betReference); ;
 
             var totalPayout = betTransactions.Sum(x => x.OutcomeAmount);
 
@@ -272,6 +258,7 @@ namespace Roulette.BusinessLogic
                     PlayerName = "",
                     TransactionType = x.TransactionType,
                     Reference = x.Reference,
+                    SpinReference = x.SpinReference,
                     StakeAmount = x.StakeAmount,
                     OutcomeAmount = x.OutcomeAmount,
                     OutcomeDate = x.OutcomeDate,

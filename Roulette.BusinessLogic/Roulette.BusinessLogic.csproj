@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Roulette.Common\Roulette.Common.csproj" />
     <ProjectReference Include="..\Roulette.DataAccess\Roulette.DataAccess.csproj" />
   </ItemGroup>
 
