@@ -33,8 +33,8 @@ namespace Roulette.BusinessLogic
                     PlayerId = playerBalanceRequest.PlayerId,
                     Balance = 0,
                     Success = false,
-                    Message = "Player Balance not Found",
-                    ErrorCode = ErrorType.PlayerBalanceLow.ToString()
+                    Message = "Player Balance Not Found",
+                    ErrorCode = (int)ErrorType.PlayerBalanceLow
                 };
             }
             else
@@ -45,7 +45,7 @@ namespace Roulette.BusinessLogic
                     PlayerName = playerDetail.PlayerName,
                     Balance = playerDetail.Balance,
                     Success = true,
-                    ErrorCode = ErrorType.None.ToString()
+                    ErrorCode = (int)ErrorType.None
                 };
             }
         }
@@ -66,7 +66,7 @@ namespace Roulette.BusinessLogic
                     StakeAmount = placeBetRequest.StakeAmount,
                     Success = false,
                     Message = "Player not Found",
-                    ErrorCode = ErrorType.PlayerIdNotFound.ToString()                   
+                    ErrorCode = (int)ErrorType.PlayerIdNotFound                  
                 };
             }
             else
@@ -80,7 +80,20 @@ namespace Roulette.BusinessLogic
                         StakeAmount = placeBetRequest.StakeAmount,
                         Success = false,
                         Message = "Player Balance Low",
-                        ErrorCode = ErrorType.PlayerBalanceLow.ToString()
+                        ErrorCode = (int)ErrorType.PlayerBalanceLow
+                    };
+                }
+
+                if(placeBetRequest.StakeAmount <=0)
+                {
+                    return new PlaceBetResponse()
+                    {
+                        GameId = placeBetRequest.GameId,
+                        PlayerId = placeBetRequest.PlayerId,
+                        StakeAmount = placeBetRequest.StakeAmount,
+                        Success = false,
+                        Message = "Stake Amount Must Be Greater Than 0",
+                        ErrorCode = (int)ErrorType.StakeAmountMustBeGreaterThanZero
                     };
                 }
 
@@ -106,7 +119,7 @@ namespace Roulette.BusinessLogic
                         StakeAmount = placeBetRequest.StakeAmount,
                         Success = false,
                         Message = "Bet Reference Already Exists",
-                        ErrorCode = ErrorType.GameReferenceDuplicated.ToString()
+                        ErrorCode = (int)ErrorType.GameReferenceDuplicated
                     };
                 }
 
@@ -122,7 +135,7 @@ namespace Roulette.BusinessLogic
                     StakeAmount = placeBetRequest.StakeAmount,
                     Success = true,
                     Message = "Bet Placed Successfully",
-                    ErrorCode = ErrorType.None.ToString()
+                    ErrorCode = (int)ErrorType.None
                 };
             }
         }
@@ -142,7 +155,7 @@ namespace Roulette.BusinessLogic
                     PlayerId = spinRequest.PlayerId,
                     WinAmount = spinRequest.WinAmount,
                     Success = false,
-                    ErrorCode = ErrorType.GameReferenceNotFound.ToString(),
+                    ErrorCode = (int)ErrorType.GameReferenceNotFound,
                     Message = "Initial Bet Not Found"
                 };
             }
@@ -169,7 +182,7 @@ namespace Roulette.BusinessLogic
                 PlayerId = spinRequest.PlayerId,
                 WinAmount = spinRequest.WinAmount,
                 Success = true,
-                ErrorCode = ErrorType.None.ToString(),
+                ErrorCode = (int)ErrorType.None,
                 Message = "Spin updated successfully"
             };
         }
@@ -190,7 +203,7 @@ namespace Roulette.BusinessLogic
                     Reference = payoutRequest.Reference,
                     Success = false,
                     Message = "Player Detail not Found",
-                    ErrorCode = ErrorType.PlayerIdNotFound.ToString()
+                    ErrorCode = (int)ErrorType.PlayerIdNotFound
                 };
             }
 
@@ -204,7 +217,7 @@ namespace Roulette.BusinessLogic
                     PlayerId = payoutRequest.PlayerId,
                     Reference = payoutRequest.Reference,
                     Success = false,
-                    ErrorCode = ErrorType.GameReferenceNotFound.ToString(),
+                    ErrorCode = (int)ErrorType.GameReferenceNotFound,
                     Message = "Initial Bet Not Found"
                 };
             }
@@ -228,7 +241,7 @@ namespace Roulette.BusinessLogic
                 Reference = payoutRequest.Reference,
                 PlayerId = payoutRequest.PlayerId,
                 Success = true,
-                ErrorCode = ErrorType.None.ToString()
+                ErrorCode = (int)ErrorType.None
             };
         }
 
@@ -270,7 +283,7 @@ namespace Roulette.BusinessLogic
                     OutcomeAmount = x.OutcomeAmount,
                     OutcomeDate = x.OutcomeDate,
                     CreatedDate = x.CreatedDate,
-                    ErrorCode = ErrorType.None.ToString(),
+                    ErrorCode = (int)ErrorType.None,
                     Success = true
                 }                 
                 ).ToList().AsReadOnly());

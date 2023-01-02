@@ -23,8 +23,8 @@ namespace RouletteAPI.Controllers
         /// </summary>
         /// <param name="playerBalanceRequest"></param>
         /// <returns>PLayerBalance</returns>
-        [HttpGet("PlayerBalance")]
-        public async Task<IActionResult> GetPlayerBalance(PlayerBalanceRequest playerBalanceRequest)
+        [HttpPost("PlayerBalance")]
+        public async Task<IActionResult> GetPlayerBalance([FromBody] PlayerBalanceRequest playerBalanceRequest)
         {
             var playerBalanceResult = await _transactionsBL.PlayerBalanceAsync(playerBalanceRequest);
 
@@ -37,7 +37,7 @@ namespace RouletteAPI.Controllers
         /// <param name="placeBetRequest"></param>
         /// <returns>PlaceBetResponse</returns>
         [HttpPost("PlaceBet")]
-        public async Task<IActionResult> PlaceBet(PlaceBetRequest placeBetRequest)
+        public async Task<IActionResult> PlaceBet([FromBody] PlaceBetRequest placeBetRequest)
         {
             var placeBetResult = await _transactionsBL.DebitTransactionAsync(placeBetRequest);
 
@@ -50,7 +50,7 @@ namespace RouletteAPI.Controllers
         /// <param name="spinRequest"></param>
         /// <returns>SpinResponse Object</returns>
         [HttpPost("Spin")]
-        public async Task<IActionResult> Spin(SpinRequest spinRequest)
+        public async Task<IActionResult> Spin([FromBody] SpinRequest spinRequest)
         {
             var spinResult = await _transactionsBL.PlaySpinAsync(spinRequest);
 
@@ -63,7 +63,7 @@ namespace RouletteAPI.Controllers
         /// <param name="payoutRequest"></param>
         /// <returns>PayoutResponse Object</returns>
         [HttpPost("Payout")]
-        public async Task<IActionResult> Payout(PayoutRequest payoutRequest)
+        public async Task<IActionResult> Payout([FromBody] PayoutRequest payoutRequest)
         {
             var payoutResult = await _transactionsBL.CreditPlayerAsync(payoutRequest);
 

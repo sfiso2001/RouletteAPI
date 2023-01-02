@@ -8,7 +8,7 @@ namespace Roulette.BusinessLogic.DTO.Responses
 {
     public class ErrorResponse
     {
-        public string ErrorCode { get; set; }
+        public int ErrorCode { get; set; }
         public string ErrorDescription { get; set; }
     }
 }

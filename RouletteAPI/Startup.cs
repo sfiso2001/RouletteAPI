@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Roulette.BusinessLogic;
 using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess;
 using Roulette.DataAccess.Interfaces;
 using Roulette.DataAccess.Repositories;
-using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace RouletteAPI
 {
@@ -49,6 +48,24 @@ namespace RouletteAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Roulette v1"));
             }
 
+            app.UseExceptionHandler(error => {
+                error.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "application/json";
+                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    if (contextFeature != null)
+                    {
+                        //Log.Error($"Something Went Wrong in the {contextFeature.Error}");
+                        await context.Response.WriteAsync(new Error
+                        {
+                            ErrorCode = context.Response.StatusCode,
+                            ErrorDescription = "Internal Server Error. Please try again later."
+                        }.ToString());
+                    }
+                });
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -59,6 +76,7 @@ namespace RouletteAPI
             {
                 endpoints.MapControllers();
             });
-        }
+        }  
+    
     }
 }
