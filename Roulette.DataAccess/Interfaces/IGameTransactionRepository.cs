@@ -7,5 +7,6 @@ namespace Roulette.DataAccess.Interfaces
         void Update(GameTransaction gameTransaction);
         Task<IEnumerable<GameTransaction>> GameTransactionSpinsByReference(string betReference);
         Task<IEnumerable<GameTransaction>> GameTransactionBetsByReference(string betReference);
+        Task<double> GetGameTransactionPayoutAsync(string betReference);
     }
 }

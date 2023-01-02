@@ -47,6 +47,13 @@ namespace Roulette.DataAccess.Repositories
             return gameTransactionsByReference;
         }
 
+        public async Task<double> GetGameTransactionPayoutAsync(string betReference)
+        {
+            var betTransactions = await GameTransactionSpinsByReference(betReference); ;
 
+            var totalPayout = betTransactions.Sum(x => x.OutcomeAmount);
+
+            return totalPayout;
+        }
     }
 }

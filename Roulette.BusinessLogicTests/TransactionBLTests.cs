@@ -24,7 +24,7 @@ namespace Roulette.BusinessLogicTests
         }
         
         [TestMethod]
-        public async Task GetPlayerBalance_Success()
+        public async Task GetPlayerBalance_With_Valid_Player_details_Returns_Success_True()
         {
             // given
             var playerDetail = new PlayerDetail()
@@ -50,6 +50,32 @@ namespace Roulette.BusinessLogicTests
             // then
             Assert.IsNotNull(result);
             playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public async Task GetPlayerBalance_With_No_Valid_Player_Return_Success_False()
+        {
+            // given
+            PlayerDetail playerDetail = null;
+
+            bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(playerDetail));
+
+            var playerBalanceRequest = new PlayerBalanceRequest()
+            {
+                PlayerId = _faker.Random.Int()
+            };
+
+            // when
+            var result = await _transactionBL.PlayerBalanceAsync(playerBalanceRequest);
+
+            // then
+            Assert.IsNotNull(result);
+            playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+            result.Success.Should().BeFalse();
+
         }
 
         [TestMethod]
@@ -157,7 +183,7 @@ namespace Roulette.BusinessLogicTests
         }
 
         [TestMethod]
-        public async Task Spin_With_Valid_Details_Should_Return_Success()
+        public async Task Spin_With_Valid_Details_Should_Return_Success_True()
         {
             // given
             var spinRequest = new SpinRequest()
@@ -200,6 +226,138 @@ namespace Roulette.BusinessLogicTests
             gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled.Should().BeTrue();
             gameTransactionRepositoryGameTransactionGetAsyncHasBeenCalled.Should().BeTrue();
             result.Success.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public async Task CreditPlayer_With_Valid_Details_Should_Return_Success_True()
+        {
+            // when
+            PayoutRequest payoutRequest = new PayoutRequest()
+            {
+                GameId = _faker.Random.String2(4),
+                PlayerId = _faker.Random.Int(),
+                Reference = _faker.Random.String2(10)
+            };
+
+            GameTransaction gameTransaction = new GameTransaction(
+                transactionType: TransactionType.Bet.ToString(),
+                gameId: _faker.Random.String2(2),
+                reference: payoutRequest.Reference,
+                spinReference: payoutRequest.Reference,
+                playerId: payoutRequest.PlayerId,
+                stakeAmount: 10,
+                outcomeAmount: 5000.00,
+                createdDate: DateTime.Now);
+
+            IEnumerable<GameTransaction> gameTransactions = new List<GameTransaction>()
+            {
+                gameTransaction
+            };
+
+            var playerDetail = new PlayerDetail()
+            {
+                Id = _faker.Random.Int(),
+                PlayerName = _faker.Random.String2(FAKER_STRING2_LENGTH),
+                Balance = 2000,
+            };
+
+            bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(playerDetail));
+
+            bool gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReference(gameTransaction.Reference))
+                .Callback(() => gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = true)
+                .Returns(Task.FromResult(gameTransactions));
+
+            bool gameTransactionRepositoryGetGameTransactionPayoutAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GetGameTransactionPayoutAsync(gameTransaction.Reference))
+                .Callback(() => gameTransactionRepositoryGetGameTransactionPayoutAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(5000.00));
+
+            bool gameTransactionRepositoryGameTransactionGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => gameTransactionRepositoryGameTransactionGetAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(gameTransaction));
+
+            // when
+            var result = await _transactionBL.CreditPlayerAsync(payoutRequest);
+
+            // then
+            Assert.IsNotNull(result);
+            playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+            gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled.Should().BeTrue();
+            gameTransactionRepositoryGetGameTransactionPayoutAsyncHasBeenCalled.Should().BeTrue();
+            gameTransactionRepositoryGameTransactionGetAsyncHasBeenCalled.Should().BeTrue();
+            result.Success.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public async Task CreditPlayer_With_No_Player_Found_Details_Should_Return_Success_False()
+        {
+            // when
+            PayoutRequest payoutRequest = new PayoutRequest()
+            {
+                GameId = _faker.Random.String2(4),
+                PlayerId = _faker.Random.Int(),
+                Reference = _faker.Random.String2(10)
+            };
+
+            PlayerDetail playerDetail = null;
+
+            bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(playerDetail));
+
+            // when
+            var result = await _transactionBL.CreditPlayerAsync(payoutRequest);
+
+            // then
+            Assert.IsNotNull(result);
+            playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+            result.Success.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public async Task CreditPlayer_With_No_Initial_Bet_Should_Return_Success_False()
+        {
+            // when
+            PayoutRequest payoutRequest = new PayoutRequest()
+            {
+                GameId = _faker.Random.String2(4),
+                PlayerId = _faker.Random.Int(),
+                Reference = _faker.Random.String2(10)
+            };
+
+            IEnumerable<GameTransaction> gameTransactions = new List<GameTransaction>();
+
+            var playerDetail = new PlayerDetail()
+            {
+                Id = _faker.Random.Int(),
+                PlayerName = _faker.Random.String2(FAKER_STRING2_LENGTH),
+                Balance = 2000,
+            };
+
+            bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
+                .Callback(() => playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = true)
+                .Returns(Task.FromResult(playerDetail));
+
+            bool gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = false;
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReference(It.IsAny<string>()))
+                .Callback(() => gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = true)
+                .Returns(Task.FromResult(gameTransactions));
+
+            // when
+            var result = await _transactionBL.CreditPlayerAsync(payoutRequest);
+
+            // then
+            Assert.IsNotNull(result);
+            playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled.Should().BeTrue();
+            gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled.Should().BeTrue();
+            result.Success.Should().BeFalse();
         }
     }
 }

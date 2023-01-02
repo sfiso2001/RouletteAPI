@@ -25,8 +25,7 @@ namespace Roulette.DataAccess.Repositories
         //Get
         public async Task<T> GetAsync(int id)
         {
-            return await dbSet.FindAsync(id) 
-                ?? throw new Exception("Not record found");
+            return await dbSet.FindAsync(id);
         }
 
         //GetAll

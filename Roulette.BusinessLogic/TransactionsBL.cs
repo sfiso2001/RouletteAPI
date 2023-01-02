@@ -65,8 +65,8 @@ namespace Roulette.BusinessLogic
                     PlayerId = placeBetRequest.PlayerId,
                     StakeAmount = placeBetRequest.StakeAmount,
                     Success = false,
-                    Message = "Player Balance not Found",
-                    ErrorCode = ErrorType.None.ToString()                   
+                    Message = "Player not Found",
+                    ErrorCode = ErrorType.PlayerIdNotFound.ToString()                   
                 };
             }
             else
@@ -181,6 +181,21 @@ namespace Roulette.BusinessLogic
         {
             payoutRequest.AssertIsNotNull(nameof(payoutRequest));
 
+            var playerDetail = await _unitOfWork.PlayerDetailRepository.GetAsync(payoutRequest.PlayerId);
+
+            if (playerDetail == null)
+            {
+                return new PayoutResponse()
+                {
+                    GameId = payoutRequest.GameId,
+                    PlayerId = payoutRequest.PlayerId,
+                    Reference = payoutRequest.Reference,
+                    Success = false,
+                    Message = "Player Detail not Found",
+                    ErrorCode = ErrorType.PlayerIdNotFound.ToString()
+                };
+            }
+
             var existingBet = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReference(payoutRequest.Reference);
 
             if (!existingBet.Any())
@@ -196,7 +211,7 @@ namespace Roulette.BusinessLogic
                 };
             }
 
-            var gamePayout = await GetGameTransactionPayoutAsync(payoutRequest.Reference);
+            var gamePayout = await _unitOfWork.GameTransactionRepository.GetGameTransactionPayoutAsync(payoutRequest.Reference);
 
             var gameTransactionFromDb = await _unitOfWork.GameTransactionRepository.GetAsync(existingBet.FirstOrDefault().Id);
 
@@ -204,6 +219,9 @@ namespace Roulette.BusinessLogic
             gameTransactionFromDb.OutcomeDate = DateTime.Now;
 
             _unitOfWork.GameTransactionRepository.Update(gameTransactionFromDb);
+
+            playerDetail.Balance = playerDetail.Balance + gamePayout;
+            _unitOfWork.PlayerDetailRepository.Update(playerDetail);
             _unitOfWork.Save();
 
             return new PayoutResponse()
@@ -237,16 +255,7 @@ namespace Roulette.BusinessLogic
 
             return betReference + "-" +nextReferentNumber.ToString();
         }
-       
-        private async Task<double> GetGameTransactionPayoutAsync(string betReference)
-        {
-            var betTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReference(betReference); ;
-
-            var totalPayout = betTransactions.Sum(x => x.OutcomeAmount);
-
-            return totalPayout;
-        }
-
+      
         private List<BetTransactionsResponse> MapBetTransactions(IEnumerable<GameTransaction> gameList)
         {
             return new List<BetTransactionsResponse>(gameList
