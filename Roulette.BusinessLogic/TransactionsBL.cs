@@ -95,9 +95,7 @@ namespace Roulette.BusinessLogic
                     createdDate: DateTime.Now
                     );
 
-                var existingBets = await _unitOfWork.GameTransactionRepository.GetAllAsync(
-                    filter: x => (x.Reference == placeBetRequest.Reference)
-                && (x.TransactionType == TransactionType.Bet.ToString()));
+                var existingBets = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReference(placeBetRequest.Reference);
 
                 if(existingBets.Any())
                 {
