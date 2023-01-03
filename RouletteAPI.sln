@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roulette.DataAccess", "Roul
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roulette.BusinessLogic", "Roulette.BusinessLogic\Roulette.BusinessLogic.csproj", "{67E2BBCF-5212-4BC2-98AC-E7D1EB727DF5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanCollection", "PostmanCollection", "{8494C119-E0C1-49CC-AA5A-3E390634B3DC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roulette.BusinessLogic.Tests", "Roulette.BusinessLogicTests\Roulette.BusinessLogic.Tests.csproj", "{A8CAA6C9-EA3A-435A-B156-5D4B4F42BF90}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roulette.Common", "Roulette.Common\Roulette.Common.csproj", "{C5748786-1D26-4761-B510-EBDBC1EBEF53}"
