@@ -5,7 +5,6 @@ using Roulette.BusinessLogic.Interfaces;
 using Roulette.DataAccess;
 using Roulette.DataAccess.Interfaces;
 using Roulette.DataAccess.Repositories;
-using System.Runtime.CompilerServices;
 
 namespace RouletteAPI
 {
