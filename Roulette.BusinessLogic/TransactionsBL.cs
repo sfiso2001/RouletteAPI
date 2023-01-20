@@ -108,7 +108,7 @@ namespace Roulette.BusinessLogic
                     createdDate: DateTime.Now
                     );
 
-                var existingBets = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReference(placeBetRequest.Reference);
+                var existingBets = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReferenceAsync(placeBetRequest.Reference);
 
                 if(existingBets.Any())
                 {
@@ -145,7 +145,7 @@ namespace Roulette.BusinessLogic
         {
             spinRequest.AssertIsNotNull(nameof(spinRequest));
 
-            var existingBet = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReference(spinRequest.Reference);
+            var existingBet = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReferenceAsync(spinRequest.Reference);
 
             if (!existingBet.Any())
             {
@@ -207,7 +207,7 @@ namespace Roulette.BusinessLogic
                 };
             }
 
-            var existingBet = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReference(payoutRequest.Reference);
+            var existingBet = await _unitOfWork.GameTransactionRepository.GameTransactionBetsByReferenceAsync(payoutRequest.Reference);
 
             if (!existingBet.Any())
             {
@@ -248,14 +248,14 @@ namespace Roulette.BusinessLogic
         //ShowPreviousSpins
         public async Task<List<BetTransactionsResponse>> ShowPreviousSpinsAsync(string betReference)
         {
-            var betTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReference(betReference);
+            var betTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReferenceAsync(betReference);
     
             return MapBetTransactions(betTransactions);
         }
 
         private async Task<string> NextSpinReferenceAsync(string betReference)
         {
-            var currentSpinGameTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReference(betReference); ;
+            var currentSpinGameTransactions = await _unitOfWork.GameTransactionRepository.GameTransactionSpinsByReferenceAsync(betReference); ;
 
             int nextReferentNumber = 1;
             

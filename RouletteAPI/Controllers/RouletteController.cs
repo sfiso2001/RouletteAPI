@@ -13,11 +13,6 @@ namespace RouletteAPI.Controllers
             _transactionsBL = transactionsBL;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         /// <summary>
         /// Method to get player details including current balance, player name and unique Id
         /// </summary>
@@ -45,9 +40,9 @@ namespace RouletteAPI.Controllers
         }
 
         /// <summary>
-        /// Method to play Spin for an intial Bet
+        /// Method to play Spin for an initial Bet
         /// </summary>
-        /// <param name="spinRequest"></param>
+        /// <param name="spinRequest">spinRequest</param>
         /// <returns>SpinResponse Object</returns>
         [HttpPost("Spin")]
         public async Task<IActionResult> Spin([FromBody] SpinRequest spinRequest)
@@ -60,7 +55,7 @@ namespace RouletteAPI.Controllers
         /// <summary>
         /// Method to Payout Player
         /// </summary>
-        /// <param name="payoutRequest"></param>
+        /// <param name="payoutRequest">payoutRequest</param>
         /// <returns>PayoutResponse Object</returns>
         [HttpPost("Payout")]
         public async Task<IActionResult> Payout([FromBody] PayoutRequest payoutRequest)

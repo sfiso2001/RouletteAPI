@@ -2,25 +2,25 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Roulette.BusinessLogic;
+using Roulette.BusinessLogicTests;
 using Roulette.BusinessLogic.DTO.Requests;
 using Roulette.Common.Enums;
 using Roulette.DataAccess.Interfaces;
 using Roulette.Models;
 
-namespace Roulette.BusinessLogicTests
+namespace Roulette.BusinessLogic.Tests
 {
     [TestClass]
-    public class TransactionBLTests : BaseTest
+    public class TransactionBlTests : BaseTest
     {
         private readonly Mock<IUnitOfWork> _unitOfWork = new();
-        private Mock<ILogger<TransactionsBL>> _logger = new();
-        private TransactionsBL _transactionBL;
+        private readonly Mock<ILogger<TransactionsBL>> _logger = new();
+        private TransactionsBL _transactionBl;
 
         [TestInitialize]
         public void Initialize()
         {
-            _transactionBL = new TransactionsBL(_unitOfWork.Object, _logger.Object);
+            _transactionBl = new TransactionsBL(_unitOfWork.Object, _logger.Object);
         }
         
         [TestMethod]
@@ -45,7 +45,7 @@ namespace Roulette.BusinessLogicTests
             };
 
             // when
-            var result = await _transactionBL.PlayerBalanceAsync(playerBalanceRequest);
+            var result = await _transactionBl.PlayerBalanceAsync(playerBalanceRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -56,7 +56,7 @@ namespace Roulette.BusinessLogicTests
         public async Task GetPlayerBalance_With_No_Valid_Player_Return_Success_False()
         {
             // given
-            PlayerDetail playerDetail = null;
+            PlayerDetail playerDetail = null!;
 
             bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
             _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
@@ -69,7 +69,7 @@ namespace Roulette.BusinessLogicTests
             };
 
             // when
-            var result = await _transactionBL.PlayerBalanceAsync(playerBalanceRequest);
+            var result = await _transactionBl.PlayerBalanceAsync(playerBalanceRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -111,7 +111,7 @@ namespace Roulette.BusinessLogicTests
             };
 
             // when
-            var result = await _transactionBL.DebitTransactionAsync(placeBetRequest);
+            var result = await _transactionBl.DebitTransactionAsync(placeBetRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -146,7 +146,7 @@ namespace Roulette.BusinessLogicTests
             };
 
             // when
-            var result = await _transactionBL.DebitTransactionAsync(placeBetRequest);
+            var result = await _transactionBl.DebitTransactionAsync(placeBetRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -161,7 +161,7 @@ namespace Roulette.BusinessLogicTests
             IEnumerable<GameTransaction> gameTransactions = new List<GameTransaction>();
 
             bool gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = false;
-            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReference(It.IsAny<string>()))
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReferenceAsync(It.IsAny<string>()))
                 .Callback(() => gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = true)
                 .Returns(Task.FromResult(gameTransactions));
 
@@ -174,7 +174,7 @@ namespace Roulette.BusinessLogicTests
             };
 
             // when
-            var result = await _transactionBL.PlaySpinAsync(spinRequest);
+            var result = await _transactionBl.PlaySpinAsync(spinRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -210,7 +210,7 @@ namespace Roulette.BusinessLogicTests
             };
 
             bool gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = false;
-            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReference(It.IsAny<string>()))
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReferenceAsync(It.IsAny<string>()))
                 .Callback(() => gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = true)
                 .Returns(Task.FromResult(gameTransactions));
 
@@ -219,7 +219,7 @@ namespace Roulette.BusinessLogicTests
                 .Callback(() => gameTransactionRepositoryGameTransactionGetAsyncHasBeenCalled = true)
                 .Returns(Task.FromResult(gameTransaction));
             // when
-            var result = await _transactionBL.PlaySpinAsync(spinRequest);
+            var result = await _transactionBl.PlaySpinAsync(spinRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -267,7 +267,7 @@ namespace Roulette.BusinessLogicTests
                 .Returns(Task.FromResult(playerDetail));
 
             bool gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = false;
-            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReference(gameTransaction.Reference))
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReferenceAsync(gameTransaction.Reference))
                 .Callback(() => gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = true)
                 .Returns(Task.FromResult(gameTransactions));
 
@@ -282,7 +282,7 @@ namespace Roulette.BusinessLogicTests
                 .Returns(Task.FromResult(gameTransaction));
 
             // when
-            var result = await _transactionBL.CreditPlayerAsync(payoutRequest);
+            var result = await _transactionBl.CreditPlayerAsync(payoutRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -304,7 +304,7 @@ namespace Roulette.BusinessLogicTests
                 Reference = _faker.Random.String2(10)
             };
 
-            PlayerDetail playerDetail = null;
+            PlayerDetail playerDetail = null!;
 
             bool playerDetailUnitOfWorkRepositoryGetAsyncHasBeenCalled = false;
             _unitOfWork.Setup(x => x.PlayerDetailRepository.GetAsync(It.IsAny<int>()))
@@ -312,7 +312,7 @@ namespace Roulette.BusinessLogicTests
                 .Returns(Task.FromResult(playerDetail));
 
             // when
-            var result = await _transactionBL.CreditPlayerAsync(payoutRequest);
+            var result = await _transactionBl.CreditPlayerAsync(payoutRequest);
 
             // then
             Assert.IsNotNull(result);
@@ -324,7 +324,7 @@ namespace Roulette.BusinessLogicTests
         public async Task CreditPlayer_With_No_Initial_Bet_Should_Return_Success_False()
         {
             // when
-            PayoutRequest payoutRequest = new PayoutRequest()
+            var payoutRequest = new PayoutRequest()
             {
                 GameId = _faker.Random.String2(4),
                 PlayerId = _faker.Random.Int(),
@@ -346,12 +346,12 @@ namespace Roulette.BusinessLogicTests
                 .Returns(Task.FromResult(playerDetail));
 
             bool gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = false;
-            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReference(It.IsAny<string>()))
+            _unitOfWork.Setup(x => x.GameTransactionRepository.GameTransactionBetsByReferenceAsync(It.IsAny<string>()))
                 .Callback(() => gameTransactionRepositoryGameTransactionBetsByReferenceHasBeenCalled = true)
                 .Returns(Task.FromResult(gameTransactions));
 
             // when
-            var result = await _transactionBL.CreditPlayerAsync(payoutRequest);
+            var result = await _transactionBl.CreditPlayerAsync(payoutRequest);
 
             // then
             Assert.IsNotNull(result);

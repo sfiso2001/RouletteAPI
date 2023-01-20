@@ -27,7 +27,7 @@ namespace Roulette.DataAccess.Repositories
             }
         }
 
-        public async Task<IEnumerable<GameTransaction>> GameTransactionBetsByReference(string betReference)
+        public async Task<IEnumerable<GameTransaction>> GameTransactionBetsByReferenceAsync(string betReference)
         {
             var gameTransactionsByReference = await _db.GameTransactions
                 .Where(x => x.Reference == betReference
@@ -37,7 +37,7 @@ namespace Roulette.DataAccess.Repositories
             return gameTransactionsByReference;
         }
 
-        public async Task<IEnumerable<GameTransaction>> GameTransactionSpinsByReference(string betReference)
+        public async Task<IEnumerable<GameTransaction>> GameTransactionSpinsByReferenceAsync(string betReference)
         {
             var gameTransactionsByReference = await _db.GameTransactions
                 .Where(x => x.Reference == betReference 
@@ -49,7 +49,7 @@ namespace Roulette.DataAccess.Repositories
 
         public async Task<double> GetGameTransactionPayoutAsync(string betReference)
         {
-            var betTransactions = await GameTransactionSpinsByReference(betReference); ;
+            var betTransactions = await GameTransactionSpinsByReferenceAsync(betReference); ;
 
             var totalPayout = betTransactions.Sum(x => x.OutcomeAmount);
 
